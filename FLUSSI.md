@@ -1,10 +1,12 @@
-# Flussi operativi — CRUD PHP / PDO / MySQL
+# CRUD_PHP_PDO_MYSQL_BOOTSTRAP — Flussi operativi
 
-[README](README.md)
+[README del progetto](README.md) · [Flussi nel README](README.md#flussi-operativi)
 
-## Ambito
+I flussi descrivono il comportamento implementato, inclusi gli effetti parziali e le automazioni non attive. La ricostruzione si basa sull'analisi statica dei sorgenti dell'8 ottobre 2026; le verifiche proposte non costituiscono test già eseguiti.
 
-Flussi ricavati dai sorgenti disponibili il 8 ottobre 2026; verifica statica, senza eseguire scritture su MySQL. Il progetto gestisce allievi, lezioni e professori tramite pagine PHP. Non è presente un flusso di login nei file esaminati.
+## Contesto operativo
+
+Il progetto gestisce allievi, lezioni e professori tramite pagine PHP. Non è presente un flusso di login nei file esaminati.
 
 ## Punto di ingresso e consultazione
 
@@ -48,7 +50,7 @@ Le pagine includono [dbconnection.php](dbconnection.php), preparano ed eseguono 
 | Lezione | [lezione_update_front.php](lezione_update_front.php) | index.php |
 | Professore | [prof_update_front.php](prof_update_front.php) | **fetch.php, assente dal repository** |
 
-**Interruzione reale:** la modifica del professore può essere già salvata nel database quando la navigazione finale fallisce perché `fetch.php` non esiste. Tornare alla lista e verificare il dato prima di ripetere. Questa documentazione non corregge il redirect.
+**Interruzione del flusso:** la modifica del professore può essere già salvata nel database quando la navigazione finale fallisce perché `fetch.php` non esiste. Tornare alla lista e verificare il dato prima di ripetere. Il redirect descritto corrisponde all'implementazione attuale.
 
 Per un id inesistente non risulta una pagina 404 applicativa dedicata: il SELECT non valorizza i dati attesi dal modulo. L'alert di modifica non verifica quante righe siano state effettivamente aggiornate.
 
@@ -61,7 +63,7 @@ Per un id inesistente non risulta una pagina 404 applicativa dedicata: il SELECT
 5. PHP converte l'id a intero ed esegue il DELETE parametrizzato.
 6. Restituisce alert e navigazione alla lista, che viene ricaricata.
 
-Gestori: [allievi_delete.php](allievi_delete.php), [lezione_delete.php](lezione_delete.php), [prof_delete.php](prof_delete.php). Non c'è un cestino o un ripristino implementato. Vincoli e possibili effetti sulle relazioni dipendono dallo schema MySQL; non vengono inventati qui.
+Gestori: [allievi_delete.php](allievi_delete.php), [lezione_delete.php](lezione_delete.php), [prof_delete.php](prof_delete.php). Non è presente un cestino o un ripristino implementato. Vincoli e possibili effetti sulle relazioni dipendono dallo schema MySQL; non sono definiti dalla logica PHP esaminata.
 
 ```mermaid
 flowchart TD
@@ -87,6 +89,6 @@ Il gestore di connessione intercetta `PDOException`; le operazioni CRUD non hann
 
 Le uniche azioni automatiche del ciclo sono query, generazione HTML, alert e navigazione JavaScript dopo la risposta. Se JavaScript non viene eseguito, la navigazione finale non avviene automaticamente. Non risultano notifiche email, processi schedulati, attività in background o GitHub Actions. Dopo la risposta PHP, l'operazione server termina.
 
-## Verifica manuale suggerita
+## Verifica dei flussi
 
 Su un database di prova: inserire e modificare ciascuna entità, annullare e confermare una cancellazione, aprire un id inesistente e controllare il redirect della modifica professore. Verificare la lista con join dopo aver cambiato `idlezione` di un allievo.
